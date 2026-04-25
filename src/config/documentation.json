@@ -4,5 +4,164 @@
     "info":{
         "title": "Bibliotheque API",
         "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3030/",
+            "description": "Serveur de développement"
+        }
+    ],
+    "paths" : {
+        "/api": {
+            "get": {
+                "summary": "Message de bienvenue",
+                "tags": ["Accueil"],
+                "responses": {
+                    "200": {
+                        "description": "Retourne un message de bienvenue",
+                        "content": {
+                            "text/html": {
+                                "example": "<h1>Mon premier serveur web sur express !</h1>"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/utilisateur" : {
+            "post": {
+                "summary": "Ajouter un utilisateur",
+                "tags": ["Utilisateur"],
+                "description": "Ajouter un utilisateur (responsable de la bibliothèque) ",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nom": {
+                                        "type": "string",
+                                        "example": "Charetard"
+                                    },
+                                    "courriel": {
+                                        "type": "string",
+                                        "example": "Fire"
+                                    },
+                                    "type_secondaire": {
+                                        "type": "string",
+                                        "example": "Flying",
+                                        "nullable": true
+                                    },
+                                    "pv": {
+                                        "type": "integer",
+                                        "example": 78
+                                    },
+                                    "attaque": {
+                                        "type": "integer",
+                                        "example": 84
+                                    },
+                                    "defense": {
+                                        "type": "integer",
+                                        "example": 78
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Pokémon ajouté avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le pokemon [Charetard] a été ajouté avec succès"
+                                        },
+                                        "pokemon": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1073
+                                                },
+                                                "nom": {
+                                                    "type": "string",
+                                                    "example": "Charetard"
+                                                },
+                                                "type_primaire": {
+                                                    "type": "string",
+                                                    "example": "Fire"
+                                                },
+                                                "type_secondaire": {
+                                                    "type": "string",
+                                                    "example": "Flying",
+                                                    "nullable": true
+                                                },
+                                                "pv": {
+                                                    "type": "integer",
+                                                    "example": 78
+                                                },
+                                                "attaque": {
+                                                    "type": "integer",
+                                                    "example": 84
+                                                },
+                                                "defense": {
+                                                    "type": "integer",
+                                                    "example": 78
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erreur de paramètres manquants",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Le format des données est invalide"
+                                        },
+                                        "champ_manquant": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "example": ["pv", "attaque"]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500" : {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Echec lors de la création du pokemon [Charitard]"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
