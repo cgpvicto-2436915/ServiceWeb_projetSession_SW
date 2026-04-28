@@ -1,7 +1,6 @@
 import livresModel from "../models/livres.model.js";
-import utilisateurModel from "../models/bibliotheques.model.js";
 import bibliothequesModel from "../models/bibliotheques.model.js";
-
+import pretsModel from "../models/prets.model.js";
 
 export const listeLivre = async (req, res) => {
     let tous = (req.query.tous == "1");
@@ -27,7 +26,7 @@ export const detailLivre = async (req, res) => {
     if(!req.params.id || parseInt(req.params.id) <= 0){
         res.status(400);
         res.send({
-            message: "L'id du livre est obligatoire et doit être supérieur à 0"
+            erreur: "L'id du livre est obligatoire et doit être supérieur à 0"
         });
         return;
     }
@@ -38,7 +37,17 @@ export const detailLivre = async (req, res) => {
         const test = await livresModel.validerExistance(cleApi, id);
         if(test){
             const livre = await livresModel.detailLivre(id);
-            res.json(livre);
+            const prets = await pretsModel.listePret(id);
+            const reponse = {
+                "id":livre.id,
+                "titre":livre.titre,
+                "description":livre.description,
+                "auteur":livre.auteur,
+                "isbn":livre.isbn,
+                "disponible":livre.disponible,
+                "prets":prets
+            };
+            res.json(reponse);
         }
         else{
             res.status(401)
@@ -59,6 +68,7 @@ export const detailLivre = async (req, res) => {
         });
     };
 };
+
 export const creerLivre = async (req,res) => {
     const titre = req.body.titre;
     const description = req.body.description;
@@ -165,7 +175,7 @@ export const modifierLivre = async (req,res) => {
         console.log('Erreur : ', erreur);
         res.status(500)
         res.send({
-            message: "Echec lors de la modification du livre "
+            message: "Echec lors de la modification du livre"
         });
     }
 };
@@ -189,7 +199,7 @@ export const modifierStatutLivre = async (req, res) => {
             livreStatut = "emprunté"
         }
 
-        res.json({message: `Le statut est maintenant : ${livreStatut}`});
+        res.json({message: `Le livre est maintenant : ${livreStatut}`});
 
     } catch (erreur) {
 
@@ -215,7 +225,7 @@ export const supprimeLivre = async (req, res) => {
         let resultat = await livresModel.supprimeLivre(id);
         
 
-        res.json({message: `"Le livre a été supprimé avec succès`});
+        res.json({message: `Le livre a été supprimé avec succès`});
 
     } catch (erreur) {
 

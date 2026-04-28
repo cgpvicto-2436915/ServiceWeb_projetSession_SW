@@ -15,7 +15,7 @@ export const creerUtilisateur = async (req, res) => {
             const utilisateurExiste = await utilisateurModel.verifierCourrielbd(courriel);
             if( utilisateurExiste){
             const reponse = {"erreur":"Le courriel existe deja"};
-            return res.status(400).json(reponse);
+            return res.status(401).json(reponse);
             }
 
 
@@ -32,7 +32,7 @@ export const creerUtilisateur = async (req, res) => {
             console.log('Erreur : ', erreur);
             res.status(500)
             res.send({
-                message: "Echec lors de la création de l'utilisateur "+ nom
+                "erreur": "Echec lors de la création de l'utilisateur "+ nom
             });
         }
 }
@@ -55,7 +55,7 @@ export const recupererCle = async (req, res) => {
         if(!usersValide)
         {
             const reponse = {"erreur":"Le compte n'existe pas"};
-            return res.status(400).json(reponse);            
+            return res.status(401).json(reponse);            
         }
         if(nouvelle == "1"){
             usersValide.cle_api = crypto.randomUUID();
@@ -72,7 +72,7 @@ export const recupererCle = async (req, res) => {
         console.log('Erreur : ', erreur);
         res.status(500)
         res.send({
-            message: "Echec lors de la recuperation de la cle"
+            "erreur": "Echec lors de la recuperation de la cle"
         });
     }
 }

@@ -3,7 +3,7 @@ import express from 'express';
 
 const router = express.Router();
 router.post('/', creerUtilisateur);
-router.get('/cle', recupererCle);
+router.post('/cle', recupererCle);
 
 
 export default router;

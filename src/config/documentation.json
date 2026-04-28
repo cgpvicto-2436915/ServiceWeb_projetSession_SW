@@ -28,11 +28,23 @@
                 }
             }
         },
-        "/api/utilisateur" : {
+        "/api/utilisateur/cle": {
             "post": {
-                "summary": "Ajouter un utilisateur",
+                "summary": "Récupérer une clé API",
                 "tags": ["Utilisateur"],
-                "description": "Ajouter un utilisateur (responsable de la bibliothèque) ",
+                "description": "Récupérer ou regénérer une clé API",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "nouvelle",
+                        "description": "Mettre 1 pour générer une nouvelle clé",
+                        "schema": {
+                            "type": "int",
+                            "example":1
+                        },
+                        "required": false
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -40,30 +52,13 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "nom": {
-                                        "type": "string",
-                                        "example": "Charetard"
-                                    },
                                     "courriel": {
                                         "type": "string",
-                                        "example": "Fire"
+                                        "example": "exemple@gmail.com"
                                     },
-                                    "type_secondaire": {
+                                    "mot_de_passe": {
                                         "type": "string",
-                                        "example": "Flying",
-                                        "nullable": true
-                                    },
-                                    "pv": {
-                                        "type": "integer",
-                                        "example": 78
-                                    },
-                                    "attaque": {
-                                        "type": "integer",
-                                        "example": 84
-                                    },
-                                    "defense": {
-                                        "type": "integer",
-                                        "example": 78
+                                        "example": "1234"
                                     }
                                 }
                             }
@@ -72,49 +67,15 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Pokémon ajouté avec succès",
+                        "description": "Recuperation de la cle api",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Le pokemon [Charetard] a été ajouté avec succès"
-                                        },
-                                        "pokemon": {
-                                            "type": "object",
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1073
-                                                },
-                                                "nom": {
-                                                    "type": "string",
-                                                    "example": "Charetard"
-                                                },
-                                                "type_primaire": {
-                                                    "type": "string",
-                                                    "example": "Fire"
-                                                },
-                                                "type_secondaire": {
-                                                    "type": "string",
-                                                    "example": "Flying",
-                                                    "nullable": true
-                                                },
-                                                "pv": {
-                                                    "type": "integer",
-                                                    "example": 78
-                                                },
-                                                "attaque": {
-                                                    "type": "integer",
-                                                    "example": 84
-                                                },
-                                                "defense": {
-                                                    "type": "integer",
-                                                    "example": 78
-                                                }
-                                            }
+                                        "cle_api":{
+                                            "type":"string",
+                                            "example":"2c9a3043-374f-4e47-8c3c-03db447c0649"
                                         }
                                     }
                                 }
@@ -130,14 +91,23 @@
                                     "properties": {
                                         "erreur": {
                                             "type": "string",
-                                            "example": "Le format des données est invalide"
-                                        },
-                                        "champ_manquant": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string"
-                                            },
-                                            "example": ["pv", "attaque"]
+                                            "example": "Un champ est manquant"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Le compte n'existe pas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Le compte n'existe pas"
                                         }
                                     }
                                 }
@@ -151,9 +121,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "message": {
+                                        "erreur": {
                                             "type": "string",
-                                            "example": "Echec lors de la création du pokemon [Charitard]"
+                                            "example": "Echec lors de la recuperation de la cle"
                                         }
                                     }
                                 }
@@ -162,6 +132,783 @@
                     }
                 }
             }
+        },
+        "/api/utilisateur" : {
+            "post": {
+                "summary": "Ajouter un utilisateur",
+                "tags": ["Utilisateur"],
+                "description": "Ajouter un utilisateur (responsable de la bibliothèque) ",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nom": {
+                                        "type": "string",
+                                        "example": "Felix"
+                                    },
+                                    "courriel": {
+                                        "type": "string",
+                                        "example": "exemple@gmail.com"
+                                    },
+                                    "mot_de_passe": {
+                                        "type": "string",
+                                        "example": "1234"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Utilisateur ajouté avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "L'utilisateur a été créé"
+                                        },
+                                        "cle_api":{
+                                            "type":"string",
+                                            "example":"2c9a3043-374f-4e47-8c3c-03db447c0649"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erreur de paramètres manquants",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Un champ est manquant"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Courriel déja existant",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Le courriel existe deja"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500" : {
+                        "description": "Erreur serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Echec lors de la création de l'utilisateur [Felix]"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/livre":{
+        
+            "get": {
+                "summary": "Liste des livres",
+                "tags": ["Livre"],
+                "description": "Récupérer la liste des livres de la bibliothèque. Par défaut, seuls les livres disponibles sont retournés.",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "tous",
+                        "description": "Mettre 1 pour avoir tous les livres, même ceux non disponibles. Si le paramètre est absent, seuls les livres disponibles sont retournés.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "example" : "1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "liste des livres retrouvée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+
+                                    "type":"array",
+                                    "items":{
+                                        "type":"object",
+                                        "properties":{
+                                            "id":{
+                                                "type":"integer",
+                                                "example":"1"
+                                            },
+                                            "titre": {
+                                                "type": "string",
+                                                "example": "livreBob"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "Bob a la plage"
+                                            },
+                                            "auteur": {
+                                                "type": "string",
+                                                "example": "Bob"
+                                            },
+                                            "isbn": {
+                                                "type": "string",
+                                                "example": "kjhg56656547"
+                                            },
+                                            "disponible": {
+                                                "type": "bool",
+                                                "example": true
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+                    },
+                    "500" : {
+                        "description": "Erreur lors de la requête SQL",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Echec lors de la récupération de la liste des livres"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    }
+                }
+            },
+            "post" : {
+                "description" : "Ajouter un livre",
+                "summary" : "Ajouter un livre",
+                "tags" : ["Livre"],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "titre": {
+                                        "type": "string",
+                                        "example": "livreBob"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Bob a la plage"
+                                    },
+                                    "auteur": {
+                                        "type": "string",
+                                        "example": "Bob"
+                                    },
+                                    "isbn": {
+                                        "type": "string",
+                                        "example": "kjhg56656547"
+                                    },
+                                    "disponible": {
+                                        "type": "bool",
+                                        "example": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Le livre a été ajouté avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le livre a été ajouté avec succès"
+                                        },
+                                        "livre":{
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "int",
+                                                    "example": 1
+                                                }, 
+                                                "titre":{
+                                                    "type": "string",
+                                                    "example": "LivreBob"
+                                                },
+                                                "description":{
+                                                    "type": "string",
+                                                    "example": "Bob a la plage"
+                                                },
+                                                "auteur":{
+                                                    "type": "string",
+                                                    "example": "Bob"
+                                                },
+                                                "isbn":{
+                                                    "type": "string",
+                                                    "example": "sdfgdg"
+                                                },
+                                                "disponible":{
+                                                    "type": "bool",
+                                                    "example": true
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                }   
+                            }
+                        }
+                    },
+                    "400" : {
+                        "description": "Erreur de paramètres manquants",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Le format des données est invalide"
+                                        },
+                                        "champ_manquant": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "example": ["titre", "isbn"]
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    },
+                    "500" : {
+                        "description": "Erreur du serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Echec lors de la création du livre"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    }
+                }
+            }
+        
+        },
+        "/api/livre/{id}": {
+            "get": {
+                "summary": "Récupérer un livre",
+                "tags": ["Livre"],
+                "description": "Récupérer un livre en fonction de son id",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Id du livre",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "example" : "1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Livre retrouvée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id":{
+                                            "type":"integer",
+                                            "example":"1"
+                                        },
+                                        "titre": {
+                                            "type": "string",
+                                            "example": "livreBob"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Bob a la plage"
+                                        },
+                                        "auteur": {
+                                            "type": "string",
+                                            "example": "Bob"
+                                        },
+                                        "isbn": {
+                                            "type": "string",
+                                            "example": "kjhg56656547"
+                                        },
+                                        "disponible": {
+                                            "type": "bool",
+                                            "example": true
+                                        },
+                                        "prets":{
+                                            "type":"array",
+                                            "items":{
+                                                "type":"object",
+                                                "properties":{
+                                                    "id":{
+                                                        "type":"integer",
+                                                        "example":"1"
+                                                    },
+                                                    "emprunteur":{
+                                                        "type":"string",
+                                                        "example":"Felix"
+                                                    },
+                                                    "date_debut":{
+                                                        "type":"string",
+                                                        "format":"date-time",
+                                                        "example":"2026-04-28T04:00:00.000Z"
+                                                    },
+                                                    "date_retour":{
+                                                        "type":"string",
+                                                        "format":"date-time",
+                                                        "example":"2026-04-28T04:00:00.000Z"
+                                                    },
+                                                    "statut":{
+                                                        "type":"string",
+                                                        "example":"En cours"
+                                                    }        
+                                                                                          
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400" : {
+                        "description": "Id incorrecte",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "L'id du livre est obligatoire et doit être supérieur à 0"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    },
+                    "401" : {
+                        "description": "Id incorrecte",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Ce livre ne vous appartient pas."
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    },
+                    "500" : {
+                        "description": "Erreur du serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Echec lors de la récupération du livre."
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    }
+                }
+            },
+            "put" : {
+                "description" : "Modifie le livre avec l'identifiant au choix",
+                "summary" : "Modifier un livre avec l'ID",
+                "tags" : ["Livre"],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Id du livre",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "example" : 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "titre": {
+                                        "type": "string",
+                                        "example": "livreBob"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Bob a la plage"
+                                    },
+                                    "auteur": {
+                                        "type": "string",
+                                        "example": "Bob"
+                                    },
+                                    "isbn": {
+                                        "type": "string",
+                                        "example": "kjhg56656547"
+                                    },
+                                    "disponible": {
+                                        "type": "bool",
+                                        "example": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Le livre a été modifié avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le livre a été modifié avec succès"
+                                        },
+                                        "livre":{
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "int",
+                                                    "example": 1
+                                                }, 
+                                                "titre":{
+                                                    "type": "string",
+                                                    "example": "LivreBob"
+                                                },
+                                                "description":{
+                                                    "type": "string",
+                                                    "example": "Bob a la plage"
+                                                },
+                                                "auteur":{
+                                                    "type": "string",
+                                                    "example": "Bob"
+                                                },
+                                                "isbn":{
+                                                    "type": "string",
+                                                    "example": "sdfgdg"
+                                                },
+                                                "disponible":{
+                                                    "type": "bool",
+                                                    "example": true
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                }   
+                            }
+                        }
+                    },
+                    "400" : {
+                        "description": "Erreur de paramètres manquants",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Le format des données est invalide"
+                                        },
+                                        "champ_manquant": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "example": ["titre", "isbn"]
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    },
+                    "401" : {
+                        "description": "Ce livre ne vous appartient pas.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Ce livre ne vous appartient pas."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500" : {
+                        "description": "Erreur du serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Echec lors de la modification du livre"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    }
+                }
+            },
+             "delete" : {
+                "description" : "Supprimer le livre avec l'identifiant au choix",
+                "summary" : "Supprimer un livre avec l'ID",
+                "tags" : ["Livre"],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Id du livre",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "example" : 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Le livre a été supprimé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le livre a été supprimé avec succès"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    },
+                    "401" : {
+                        "description": "Ce livre ne vous appartient pas.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Ce livre ne vous appartient pas."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500" : {
+                        "description": "Erreur du serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Echec lors de la modification du livre"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    }
+                }
+            }
+            
+        },
+        "/api/livre/{id}/statut": {
+            "put" : {
+                "description" : "Modifie le statut d'un livre",
+                "summary" : "Modifier le statut d'un livre avec l'ID",
+                "tags" : ["Livre"],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Id du livre",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "example" : 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Le statut du livre a été modifié avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le livre est maintenant : [disponible]"
+                                        }
+
+                                    }
+                                }   
+                            }
+                        }
+                    },
+                    "401" : {
+                        "description": "Ce livre ne vous appartient pas.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Ce livre ne vous appartient pas."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500" : {
+                        "description": "Erreur du serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Echec lors de la modification du statut du livre"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    }
+                }
+            }
+            
+        }
+    },
+    "components": {
+        "securitySchemes": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "Authorization",
+            "description": "Format attendu → cle_api VOTRE_CLE_API"
+        }
         }
     }
 }
