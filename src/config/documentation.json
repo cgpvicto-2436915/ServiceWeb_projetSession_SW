@@ -21,7 +21,7 @@
                         "description": "Retourne un message de bienvenue",
                         "content": {
                             "text/html": {
-                                "example": "<h1>Mon premier serveur web sur express !</h1>"
+                                "example": "<h1>Serveur web pour la gestion de prêt pour les livres d'une bibliothèque.</h1>"
                             }
                         }
                     }
@@ -451,7 +451,7 @@
         },
         "/api/livre/{id}": {
             "get": {
-                "summary": "Récupérer un livre",
+                "summary": "Récupérer un livre avec l'ID",
                 "tags": ["Livre"],
                 "description": "Récupérer un livre en fonction de son id",
                 "security": [
@@ -899,6 +899,467 @@
                 }
             }
             
+        },
+        "/api/pret":{
+            "post" : {
+                "description" : "Ajouter un prêt",
+                "summary" : "Ajouter un prêt",
+                "tags" : ["Prêt"],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "livre_id": {
+                                        "type": "int",
+                                        "example": "1"
+                                    },
+                                    "emprunteur": {
+                                        "type": "string",
+                                        "example": "Bob"
+                                    },
+                                    "date_debut": {
+                                        "type": "string",
+                                        "format":"date",
+                                        "example": "2026-04-28"
+                                    },
+                                    "date_retour": {
+                                        "type": "string",
+                                        "format":"date",
+                                        "example": "2026-04-28"
+                                    },
+                                    "en_cours": {
+                                        "type": "bool",
+                                        "example": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Le prêt a été ajouté avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le prêt a été ajouté avec succès"
+                                        },
+                                        "pret":{
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "int",
+                                                    "example": 1
+                                                }, 
+                                                "livre_id": {
+                                                    "type": "int",
+                                                    "example": "1"
+                                                },
+                                                "emprunteur": {
+                                                    "type": "string",
+                                                    "example": "Bob"
+                                                },
+                                                "date_debut": {
+                                                    "type": "string",
+                                                    "format":"date",
+                                                    "example": "2026-04-28"
+                                                },
+                                                "date_retour": {
+                                                    "type": "string",
+                                                    "format":"date",
+                                                    "example": "2026-04-28"
+                                                },
+                                                "en_cours": {
+                                                    "type": "bool",
+                                                    "example": true
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                }   
+                            }
+                        }
+                    },
+                    "401" : {
+                        "description": "Le livre correspondant au prêt ne vous appartient pas.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Le livre correspondant au prêt ne vous appartient pas."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400" : {
+                        "description": "Erreur de paramètres manquants",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Le format des données est invalide"
+                                        },
+                                        "champ_manquant": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "example": ["livre_id", "emprunteur"]
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    },
+                    "500" : {
+                        "description": "Erreur du serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Echec lors de l'ajout du prêt"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    }
+                }
+            }
+        
+        },
+        "/api/pret/{id}":{
+            "put" : {
+                "description" : "Modifier un prêt",
+                "summary" : "Modifier un prêt",
+                "tags" : ["Prêt"],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Id du pret",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "example" : 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "emprunteur": {
+                                        "type": "string",
+                                        "example": "Bob"
+                                    },
+                                    "date_debut": {
+                                        "type": "string",
+                                        "format":"date",
+                                        "example": "2026-04-28"
+                                    },
+                                    "date_retour": {
+                                        "type": "string",
+                                        "format":"date",
+                                        "example": "2026-04-28"
+                                    },
+                                    "en_cours": {
+                                        "type": "bool",
+                                        "example": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Le prêt a été modifié avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le prêt a été modifié avec succès"
+                                        },
+                                        "pret":{
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "int",
+                                                    "example": 1
+                                                }, 
+                                                "livre_id": {
+                                                    "type": "int",
+                                                    "example": "1"
+                                                },
+                                                "emprunteur": {
+                                                    "type": "string",
+                                                    "example": "Bob"
+                                                },
+                                                "date_debut": {
+                                                    "type": "string",
+                                                    "format":"date",
+                                                    "example": "2026-04-28"
+                                                },
+                                                "date_retour": {
+                                                    "type": "string",
+                                                    "format":"date",
+                                                    "example": "2026-04-28"
+                                                },
+                                                "en_cours": {
+                                                    "type": "bool",
+                                                    "example": true
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                }   
+                            }
+                        }
+                    },
+                    "400" : {
+                        "description": "Erreur de paramètres manquants",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Le format des données est invalide"
+                                        },
+                                        "champ_manquant": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "example": ["emprunteur"]
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    },
+                    "401" : {
+                        "description": "Le livre correspondant au prêt ne vous appartient pas.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Le livre correspondant au prêt ne vous appartient pas."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500" : {
+                        "description": "Erreur du serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Echec lors de la modification du prêt"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    }
+                }
+            },
+            "delete" : {
+                "description" : "Supprimer un prêt",
+                "summary" : "Supprimer un prêt",
+                "tags" : ["Prêt"],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Id du pret",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "example" : 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Le prêt a été supprimé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le prêt a été supprimé avec succès"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    },
+                    "401" : {
+                        "description": "Le livre correspondant au prêt ne vous appartient pas.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Le livre correspondant au prêt ne vous appartient pas."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500" : {
+                        "description": "Erreur du serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Echec lors de la suppression du prêt"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    }
+                }
+            }
+        
+        },
+        "/api/pret/{id}/statut":{
+            "put" : {
+                "description" : "Modifier le statut d'un prêt avec l'ID",
+                "summary" : "Modifier le statut d'un prêt avec l'ID",
+                "tags" : ["Prêt"],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Id du pret",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "example" : 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Le statut du prêt a été modifié avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le prêt est maintenant : [Terminé]"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    },
+                    "401" : {
+                        "description": "Le livre correspondant au prêt ne vous appartient pas.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Le livre correspondant au prêt ne vous appartient pas."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500" : {
+                        "description": "Erreur du serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Echec lors de la modification du statut du livre"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {

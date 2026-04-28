@@ -30,10 +30,10 @@ const creerPret = async(livre_id,emprunteur,date_debut,date_retour,en_cours) =>{
 }
 
 
-const modifierPret = async(id, livre_id,emprunteur,date_debut,date_retour,en_cours) =>{
+const modifierPret = async(id, emprunteur,date_debut,date_retour,en_cours) =>{
 
-    const requete = `UPDATE prets SET livre_id = $1, emprunteur = $2, date_debut = $3, date_retour = $4, en_cours = $5 WHERE prets.id=$6 RETURNING id`;
-    const param = [livre_id,emprunteur,date_debut,date_retour,en_cours,id];
+    const requete = `UPDATE prets SET emprunteur = $1, date_debut = $2, date_retour = $3, en_cours = $4 WHERE prets.id=$5 RETURNING id`;
+    const param = [emprunteur,date_debut,date_retour,en_cours,id];
     try {
         const resultats = await pool.query(requete,param);
 
@@ -69,7 +69,7 @@ const modifierStatutPret = async(id) =>{
     }
 }
 
-const supprimePret = async(id) =>{
+const supprimerPret = async(id) =>{
     const requete1 = `DELETE FROM prets WHERE id = $1`;
     const param = [id];
     try {
@@ -82,10 +82,26 @@ const supprimePret = async(id) =>{
         throw erreur;
     }
 }
+//retourne le id du livre qui correspond au pret
+const livreIdPret = async(id) =>{
+    const requete1 = `Select livre_id FROM prets WHERE id=$1`;
+    const param = [id];
+    try {
+
+        const resultats = await pool.query(requete1,param);
+
+        return resultats.rows[0]?.livre_id ?? null;
+    } catch (erreur) {
+        console.log(`Erreur, code: ${erreur.code} message: ${erreur.message}`);
+        throw erreur;
+    }
+}
 
 export default {
     listePret,
     creerPret,
     modifierPret,
-    modifierStatutPret
+    modifierStatutPret,
+    livreIdPret,
+    supprimerPret
 }

@@ -16,7 +16,7 @@ export const listeLivre = async (req, res) => {
 
         console.log('Erreur : ', erreur);
         res.status(500)
-        res.send({
+        res.json({
             erreur: "Echec lors de la récupération de la liste des livres"
         });
     };
@@ -25,7 +25,7 @@ export const detailLivre = async (req, res) => {
 
     if(!req.params.id || parseInt(req.params.id) <= 0){
         res.status(400);
-        res.send({
+        res.json({
             erreur: "L'id du livre est obligatoire et doit être supérieur à 0"
         });
         return;
@@ -51,7 +51,7 @@ export const detailLivre = async (req, res) => {
         }
         else{
             res.status(401)
-            res.send({
+            res.json({
                 erreur: "Ce livre ne vous appartient pas."
             });
         }
@@ -63,7 +63,7 @@ export const detailLivre = async (req, res) => {
 
         console.log('Erreur : ', erreur);
         res.status(500)
-        res.send({
+        res.json({
             erreur: "Echec lors de la récupération du livre."
         });
     };
@@ -116,7 +116,7 @@ export const creerLivre = async (req,res) => {
 
         console.log('Erreur : ', erreur);
         res.status(500)
-        res.send({
+        res.json({
             message: "Echec lors de la création du livre "
         });
     }
@@ -174,7 +174,7 @@ export const modifierLivre = async (req,res) => {
 
         console.log('Erreur : ', erreur);
         res.status(500)
-        res.send({
+        res.json({
             message: "Echec lors de la modification du livre"
         });
     }
@@ -205,7 +205,7 @@ export const modifierStatutLivre = async (req, res) => {
 
         console.log('Erreur : ', erreur);
         res.status(500)
-        res.send({
+        res.json({
             erreur: "Echec lors de la modification du statut du livre"
         });
     };
@@ -231,7 +231,7 @@ export const supprimeLivre = async (req, res) => {
 
         console.log('Erreur : ', erreur);
         res.status(500)
-        res.send({
+        res.json({
             erreur: "Echec lors de la suppression du livre"
         });
     };

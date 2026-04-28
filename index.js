@@ -4,6 +4,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import utilisateursRouter from './src/routes/bibliotheques.route.js';
 import livresRouter from './src/routes/livres.route.js';
+import pretsRouter from './src/routes/prets.route.js';
 
 import authentification from './src/middlewares/authentification.middleware.js';
 import swaggerUi from 'swagger-ui-express';
@@ -23,9 +24,10 @@ const app = express();
 app.use(express.json());
 app.use('/api/utilisateur',utilisateursRouter);
 app.use('/api/livre', authentification, livresRouter);
+app.use('/api/pret', authentification, pretsRouter);
 
 app.get('/api', (req, res) => {
-    res.send("<h1>Mon premier serveur web sur express !</h1>");
+    res.send("<h1>Serveur web pour la gestion de prêts pour les livres d'une bibliothèque.</h1>");
 });
 app.use('/api/docs',
         swaggerUi.serve,
