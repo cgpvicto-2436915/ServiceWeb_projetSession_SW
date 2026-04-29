@@ -76,8 +76,7 @@ const connection = async (courriel,mdp) =>{
         if (!resultats.rows || resultats.rows.length === 0) {
             return null;
         }
-        console.log("mdp:"+mdp );
-        console.log("mdp dans bd:"+resultats.rows[0].password);
+
         const motDePasseValide = await bcrypt.compare(mdp, resultats.rows[0].password);
         if(motDePasseValide)
         {
