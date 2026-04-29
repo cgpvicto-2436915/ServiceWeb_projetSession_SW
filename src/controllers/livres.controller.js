@@ -193,7 +193,7 @@ export const modifierStatutLivre = async (req, res) => {
 
         let livreStatut = await livresModel.modifierStatutLivre(id);
         
-        if(listeLivre){
+        if(livreStatut){
             livreStatut = "disponible"
         }else{
             livreStatut = "emprunté"
