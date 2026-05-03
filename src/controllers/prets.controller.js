@@ -140,7 +140,7 @@ export const supprimerPret = async (req, res) => {
         let resultat = await pretsModel.supprimerPret(id);
         
 
-        res.status(201).json({message: `Le prêt a été supprimé avec succès`});
+        res.status(200).json({message: `Le prêt a été supprimé avec succès`});
 
     } catch (erreur) {
 

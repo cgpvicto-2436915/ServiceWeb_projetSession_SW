@@ -3,7 +3,8 @@ import pool from '../config/db_pg.js';
 
 
 const listePret = async (livre_id) => {
-    var requete = `SELECT id,emprunteur,date_debut,date_retour,CASE WHEN en_cours THEN 'En cours' ELSE 'Terminé' END AS statut FROM prets WHERE livre_id = $1 ORDER BY id`;
+    //source pour "TO_CHAR" -> https://www.datacamp.com/fr/doc/postgresql/to_char-(formatting-dates)
+    var requete = `SELECT id,emprunteur,TO_CHAR(date_debut, 'YYYY-MM-DD'),TO_CHAR(date_retour, 'YYYY-MM-DD'),CASE WHEN en_cours THEN 'En cours' ELSE 'Terminé' END AS statut FROM prets WHERE livre_id = $1 ORDER BY id`;
     try {
         var params = [livre_id];  
         var resultats = await pool.query(requete, params);
