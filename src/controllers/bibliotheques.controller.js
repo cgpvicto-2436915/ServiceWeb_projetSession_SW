@@ -1,4 +1,6 @@
 import utilisateurModel from "../models/bibliotheques.model.js";
+
+//crée un utilisateur (biblio) a partir des infos et retourne une cle d'API
 export const creerUtilisateur = async (req, res) => {
 
         const nom = req.body.nom;
@@ -37,6 +39,8 @@ export const creerUtilisateur = async (req, res) => {
         }
 }
 
+//recupere une cle d'api ou en genere un autre selon le parametre nouvelle.
+//retourne la cle d'api
 export const recupererCle = async (req, res) => {
 
     const courriel = req.body.courriel;

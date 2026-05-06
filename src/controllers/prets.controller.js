@@ -1,7 +1,7 @@
 import pretsModel from "../models/prets.model.js";
 import livresModel from "../models/livres.model.js";
 
-
+//crée un pret selon les infos dans le corps de la requete
 export const creerPret = async (req,res) => {
     const regexDate = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -64,6 +64,7 @@ export const creerPret = async (req,res) => {
     }
 };
 
+//modifie un pert a partir des information fourni dans la requete
 export const modifierPret = async (req,res) => {
     const regexDate = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -125,6 +126,7 @@ export const modifierPret = async (req,res) => {
     }
 };
 
+//supprime un pret a partir de son id dans la route
 export const supprimerPret = async (req, res) => {
     const id  = parseInt(req.params.id) ?? null;
 
@@ -152,6 +154,7 @@ export const supprimerPret = async (req, res) => {
     };
 };
 
+//modifie le statut d'un pret a partir de son id dans la route
 export const modifierStatutPret = async (req, res) => {
     const id  = parseInt(req.params.id) ?? null;
 

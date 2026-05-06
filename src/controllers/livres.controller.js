@@ -2,6 +2,7 @@ import livresModel from "../models/livres.model.js";
 import bibliothequesModel from "../models/bibliotheques.model.js";
 import pretsModel from "../models/prets.model.js";
 
+//retourne une liste de livre qui appartient a la cle d'api
 export const listeLivre = async (req, res) => {
     let tous = (req.query.tous == "1");
 
@@ -21,6 +22,9 @@ export const listeLivre = async (req, res) => {
         });
     };
 };
+
+//retourne les details d'un livre selon le id qui est dans la route.
+//Le livre doit appartenir a la bibliotheque.
 export const detailLivre = async (req, res) => {
 
     if(!req.params.id || parseInt(req.params.id) <= 0){
@@ -56,9 +60,6 @@ export const detailLivre = async (req, res) => {
             });
         }
         
-        
-        
-
     } catch (erreur) {
 
         console.log('Erreur : ', erreur);
@@ -69,6 +70,7 @@ export const detailLivre = async (req, res) => {
     };
 };
 
+//Crée un livre, pour la biblio de la cle api, selon les informations fourni dans le corps de la requete. 
 export const creerLivre = async (req,res) => {
     const titre = req.body.titre;
     const description = req.body.description;
@@ -122,6 +124,7 @@ export const creerLivre = async (req,res) => {
     }
 };
 
+//Modifier un livre, pour la biblio de la cle api, selon les informations fourni dans le corps de la requete. 
 export const modifierLivre = async (req,res) => {
     const id  = parseInt(req.params.id) ?? null;
     const titre = req.body.titre;
@@ -180,6 +183,7 @@ export const modifierLivre = async (req,res) => {
     }
 };
 
+//Modifie le statut d'un livre selon son id.
 export const modifierStatutLivre = async (req, res) => {
     const id  = parseInt(req.params.id) ?? null;
 
@@ -211,6 +215,7 @@ export const modifierStatutLivre = async (req, res) => {
     };
 };
 
+//Supprime un livre selon son id fourni dans la route
 export const supprimeLivre = async (req, res) => {
     const id  = parseInt(req.params.id) ?? null;
 
