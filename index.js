@@ -27,6 +27,7 @@ const app = express();
 
 app.use(morgan('combined', { stream: accessLogStream,skip:(req,res)=>res.statusCode < 500 }));//docs de morgan
 app.use(cors());
+
 app.use(express.json());
 app.use('/api/utilisateur',utilisateursRouter);
 app.use('/api/livre', authentification, livresRouter);
